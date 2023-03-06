@@ -1,10 +1,10 @@
 # clima
 
-A new Flutter project.
+A Flutter project to track and display weather conditions across the world's cities.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is an application that consumes API from openweathermap.com to track weather across cities the world over, with some UI indications for the changing conditions.
 
 A few resources to get you started if this is your first Flutter project:
 
