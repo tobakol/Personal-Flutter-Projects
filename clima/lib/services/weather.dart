@@ -2,7 +2,7 @@ import '../services/networking.dart';
 import '../services/location.dart';
 
 const api_key =
-    'api-key'; //register at https://api.openweathermap.org to get a valid api-key
+    'e9a336dc55698488726dc979913c8ead'; //register at https://api.openweathermap.org to get a valid api-key
 const apiSource = 'https://api.openweathermap.org/data/2.5/weather';
 
 class WeatherModel {
@@ -16,7 +16,7 @@ class WeatherModel {
   Future<dynamic> getWeatherData() async {
     Location location = Location();
 
-    await location.getCurrentPosition();
+     location.getCurrentPosition();
     print(location.longitude);
     print(location.latitude);
 
