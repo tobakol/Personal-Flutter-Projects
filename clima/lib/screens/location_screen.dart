@@ -12,11 +12,11 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   WeatherModel weatherModel = WeatherModel();
-  String weatherIcon;
-  String message;
-  int temp;
-  String name;
-  double latitude;
+  String weatherIcon= "";
+  String message = "";
+  int temp = 0;
+  String name = "";
+  double latitude = 0;
 
   void initState() {
     super.initState();
