@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:forms_challenge/data/categories.dart';
+import '../data/categories.dart';
 
 class Category {
   final String? categoryName;

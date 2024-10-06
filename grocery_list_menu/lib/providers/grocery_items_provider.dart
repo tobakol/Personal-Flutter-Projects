@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:forms_challenge/models/grocery_item.dart';
 
 import '../data/dummy_items1.dart';
+import '../models/grocery_item.dart';
 
 class GroceryItemsNotifier extends StateNotifier<List<GroceryItem>> {
   GroceryItemsNotifier() : super(groceryItems);

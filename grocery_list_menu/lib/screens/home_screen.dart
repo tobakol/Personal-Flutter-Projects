@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:forms_challenge/models/grocery_item.dart';
-import 'package:forms_challenge/providers/grocery_items_provider.dart';
-import 'package:forms_challenge/screens/new_item.dart';
-import 'package:forms_challenge/widgets/constants.dart';
+
+import '../models/grocery_item.dart';
+import '../providers/grocery_items_provider.dart';
+import '../widgets/constants.dart';
+import 'new_item.dart';
 
 class GroceryList extends ConsumerStatefulWidget {
   const GroceryList({super.key, required this.title});
@@ -102,7 +102,7 @@ class _MyHomePageState extends ConsumerState<GroceryList> {
   @override
   void initState() {
     super.initState();
-    dio.options.connectTimeout = Duration(seconds: 10);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     saveToBackend();
   }
 
@@ -128,7 +128,7 @@ class _MyHomePageState extends ConsumerState<GroceryList> {
         child: Stack(
           children: [
             groceryItemList.isEmpty
-                ? Center(child: Text("No Items Yet"))
+                ? const Center(child: Text("No Items Yet"))
                 : Column(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children:

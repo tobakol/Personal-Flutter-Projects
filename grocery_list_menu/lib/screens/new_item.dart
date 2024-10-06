@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:forms_challenge/data/categories.dart';
-import 'package:forms_challenge/models/category.dart';
-import 'package:forms_challenge/models/grocery_item.dart';
-import 'package:forms_challenge/providers/category_providers.dart';
-import 'package:forms_challenge/widgets/constants.dart';
 
+import '../data/categories.dart';
+import '../models/category.dart';
+import '../models/grocery_item.dart';
+import '../providers/category_providers.dart';
 import '../providers/grocery_items_provider.dart';
+import '../widgets/constants.dart';
 
 class NewItem extends ConsumerStatefulWidget {
   const NewItem({super.key});
@@ -30,7 +30,7 @@ class _NewItemState extends ConsumerState<NewItem> {
     // final groceryItemList = ref.watch(groceryItemsProvider);
     Future<Response<dynamic>?> saveToBackend(GroceryItem savedGroceryItem) async {
       final dio = Dio();
-      dio.options.connectTimeout = Duration(seconds: 10);
+      dio.options.connectTimeout = const Duration(seconds: 10);
       try {
         final response = await dio.post(
           ConstantsUtil.generalUrl,
@@ -74,7 +74,9 @@ class _NewItemState extends ConsumerState<NewItem> {
             Navigator.pop(context);
           }
         } else {
-          showSnackbar(context, response?.statusMessage);
+          if (context.mounted) {
+            showSnackbar(context, response?.statusMessage);
+          }
         }
 
         // debugPrint(response?.statusMessage);
