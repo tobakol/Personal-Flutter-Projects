@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grocery_list_menu/widgets/api_services.dart';
 
 import '../data/categories.dart';
 import '../models/category.dart';
@@ -27,31 +28,7 @@ class _NewItemState extends ConsumerState<NewItem> {
   @override
   Widget build(BuildContext context) {
     final categoriesMap = ref.read(categoryProvider);
-    // final groceryItemList = ref.watch(groceryItemsProvider);
-    Future<Response<dynamic>?> saveToBackend(GroceryItem savedGroceryItem) async {
-      final dio = Dio();
-      dio.options.connectTimeout = const Duration(seconds: 10);
-      try {
-        final response = await dio.post(
-          ConstantsUtil.generalUrl,
-          data: savedGroceryItem.toJson(),
-          options: Options(
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          ),
-        );
-        debugPrint(response.data.toString());
-
-        return response;
-      } on DioException catch (e) {
-        if (e.type == DioExceptionType.connectionTimeout) {
-          return Response(requestOptions: RequestOptions(), statusMessage: "Request Took Too Long");
-        } else {
-          return e.response;
-        }
-      }
-    }
+    final dio = Dio();
 
     saveItem() async {
       setState(() {
@@ -61,25 +38,14 @@ class _NewItemState extends ConsumerState<NewItem> {
         _formKey.currentState!.save();
 
         final savedGroceryItem = GroceryItem(
-            // id: DateTime.now().toString(),
+            //id: DateTime.now().toString(),
             name: _enteredName,
             quantity: _enteredQuantity,
             category: _selectedCategory!);
+        final apiService = ApiCalls(context, ref, dio, savedGroceryItem);
+        final response = await apiService.saveToBackend(savedGroceryItem);
 
-        final response = await saveToBackend(savedGroceryItem);
-        if (response?.statusCode == 200) {
-          final wasAdded = ref.read(groceryItemsProvider.notifier).editGroceryItemToList(savedGroceryItem);
-
-          if (context.mounted) {
-            Navigator.pop(context);
-          }
-        } else {
-          if (context.mounted) {
-            showSnackbar(context, response?.statusMessage);
-          }
-        }
-
-        // debugPrint(response?.statusMessage);
+        debugPrint(response?.statusMessage);
       }
       setState(() {
         _isSending = false;
@@ -90,57 +56,42 @@ class _NewItemState extends ConsumerState<NewItem> {
       appBar: AppBar(
         title: const Text("Add a new Item"),
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      maxLength: 50,
-                      //autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(),
-                      onSaved: (newValue) {
-                        _enteredName = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty || value.trim().length <= 1 || value.trim().length > 50) {
-                          return 'Error message';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                          maxLength: 50,
+                          //autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(),
+                          onSaved: (newValue) {
+                            _enteredName = newValue!;
+                          },
+                          validator: (value) => ValidationUtil.validateItemName(value)),
+                      const SizedBox(),
+                      Column(
+                        // crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          TextFormField(
                             keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  int.tryParse(value) == null ||
-                                  int.tryParse(value)! <= 0) {
-                                return 'Error message';
-                              }
-                              return null;
-                            },
+                            validator: (value) => ValidationUtil.validateItemAmount(value),
                             onSaved: (newValue) {
                               _enteredQuantity = int.parse(newValue!);
                             },
                             decoration: const InputDecoration(labelText: "Quantity"),
                             initialValue: _enteredQuantity.toString(),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Expanded(
-                          child: DropdownButtonFormField(
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          DropdownButtonFormField(
                             value: _selectedCategory,
                             items: [
                               for (final category in categoriesMap.entries)
@@ -167,35 +118,35 @@ class _NewItemState extends ConsumerState<NewItem> {
                                 },
                               );
                             },
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              _formKey.currentState!.reset();
-                            },
-                            child: const Text('Reset')),
-                        ElevatedButton(
-                            onPressed: () async {
-                              saveItem();
-                            },
-                            child: const Text("Add Item"))
-                      ],
-                    )
-                  ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                _formKey.currentState!.reset();
+                              },
+                              child: const Text('Reset')),
+                          ElevatedButton(
+                              onPressed: () async {
+                                saveItem();
+                              },
+                              child: const Text("Add Item"))
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          loader(context, _isSending)
-        ],
+              ],
+            ),
+            ViewUtil.loader(context, _isSending)
+          ],
+        ),
       ),
     );
   }
