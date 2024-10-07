@@ -35,11 +35,7 @@ class _NewItemState extends ConsumerState<NewItem> {
         final response = await dio.post(
           ConstantsUtil.generalUrl,
           data: savedGroceryItem.toJson(),
-          options: Options(
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          ),
+          options: Options(headers: jsonHeader),
         );
         debugPrint(response.data.toString());
 
@@ -90,35 +86,35 @@ class _NewItemState extends ConsumerState<NewItem> {
       appBar: AppBar(
         title: const Text("Add a new Item"),
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      maxLength: 50,
-                      //autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(),
-                      onSaved: (newValue) {
-                        _enteredName = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty || value.trim().length <= 1 || value.trim().length > 50) {
-                          return 'Error message';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        maxLength: 50,
+                        decoration: const InputDecoration(),
+                        onSaved: (newValue) {
+                          _enteredName = newValue!;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty || value.trim().length <= 1 || value.trim().length > 50) {
+                            return 'Error message';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(),
+                      Column(
+                        // crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          TextFormField(
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null ||
@@ -135,12 +131,13 @@ class _NewItemState extends ConsumerState<NewItem> {
                             decoration: const InputDecoration(labelText: "Quantity"),
                             initialValue: _enteredQuantity.toString(),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Expanded(
-                          child: DropdownButtonFormField(
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          DropdownButtonFormField(
                             value: _selectedCategory,
                             items: [
                               for (final category in categoriesMap.entries)
@@ -167,35 +164,35 @@ class _NewItemState extends ConsumerState<NewItem> {
                                 },
                               );
                             },
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              _formKey.currentState!.reset();
-                            },
-                            child: const Text('Reset')),
-                        ElevatedButton(
-                            onPressed: () async {
-                              saveItem();
-                            },
-                            child: const Text("Add Item"))
-                      ],
-                    )
-                  ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                _formKey.currentState!.reset();
+                              },
+                              child: const Text('Reset')),
+                          ElevatedButton(
+                              onPressed: () async {
+                                saveItem();
+                              },
+                              child: const Text("Add Item"))
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          loader(context, _isSending)
-        ],
+              ],
+            ),
+            loader(context, _isSending)
+          ],
+        ),
       ),
     );
   }

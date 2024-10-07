@@ -23,6 +23,10 @@ showSnackbar(BuildContext context, String? message, [String? s]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message ?? "")));
 }
 
+final jsonHeader = {
+  'Content-Type': 'application/json',
+};
+
 class ConstantsUtil {
   static String generalUrl = "https://flutter-prep-da043-default-rtdb.firebaseio.com/shopping_list.json";
   static String deleteUrl(String id) {

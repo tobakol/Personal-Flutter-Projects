@@ -19,63 +19,48 @@ class GroceryList extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<GroceryList> {
   bool busy = false;
   final dio = Dio();
+  late Future<List<GroceryItem>> loadedListItems;
+
   void addItem() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return const NewItem();
     }));
   }
 
-  void saveToBackend() async {
-    try {
-      setState(() {
-        busy = true;
-      });
-      final response = await dio.get(
-        ConstantsUtil.generalUrl,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-      final Map<String, dynamic>? groceryMapListData = response.data;
-      if (response.data == null) {
-        setState(() {
-          busy = false;
-        });
-        return;
-      } else if (response.statusCode == 200) {
-        debugPrint(response.data.toString());
-        final List<GroceryItem> listItems = [];
-        for (final item in groceryMapListData!.entries) {
-          final itemIzedMap = <String, Map<String, dynamic>>{item.key: item.value};
-          final itemizedListItem = GroceryItem.fromJson(itemIzedMap);
-          listItems.add(itemizedListItem);
-          Future.microtask(() {
-            final wasAdded = ref.read(groceryItemsProvider.notifier).editGroceryItemToList(itemizedListItem);
-            // Set initial value
-          });
-          setState(() {
-            busy = false;
-          });
-        }
-      } else {
-        showSnackbar(context, response.statusMessage);
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout) {
-        if (context.mounted) {
-          showSnackbar(context, "Request took too long");
-        }
-      } else {
-        if (context.mounted) {
-          showSnackbar(context, 'Error: ${e.response?.data ?? e.message}');
-        }
-      }
+  Future<List<GroceryItem>> loadListFromBackend() async {
+    List<GroceryItem> overAllListItem = [];
+    setState(() {
+      busy = true;
+    });
+    final response = await dio.get(
+      ConstantsUtil.generalUrl,
+      options: Options(headers: jsonHeader),
+    );
+    final Map<String, dynamic>? groceryMapListData = response.data;
+    if (response.data == null) {
       setState(() {
         busy = false;
       });
+      return [];
     }
+    if (response.statusCode != 200) {
+      throw Exception(response.statusMessage);
+    }
+
+    debugPrint(response.data.toString());
+    final List<GroceryItem> listItems = [];
+    for (final item in groceryMapListData!.entries) {
+      final itemIzedMap = <String, Map<String, dynamic>>{item.key: item.value};
+      final itemizedListItem = GroceryItem.fromJson(itemIzedMap);
+      listItems.add(itemizedListItem);
+      Future.microtask(() {
+        final wasAdded = ref.read(groceryItemsProvider.notifier).editGroceryItemToList(itemizedListItem);
+        // Set initial value
+      });
+      //return listItems;
+      overAllListItem = listItems;
+    }
+    return overAllListItem;
   }
 
   void _deleteItem(GroceryItem item) async {
@@ -103,7 +88,7 @@ class _MyHomePageState extends ConsumerState<GroceryList> {
   void initState() {
     super.initState();
     dio.options.connectTimeout = const Duration(seconds: 10);
-    saveToBackend();
+    loadedListItems = loadListFromBackend();
   }
 
   @override
@@ -111,33 +96,38 @@ class _MyHomePageState extends ConsumerState<GroceryList> {
     // final orgList = ref.read(groceryItemsProvider);
     // debugPrint(orgList[3].id ?? "Cant yet get it");
     final groceryItemList = ref.watch(groceryItemsProvider);
+    Widget _body = SingleChildScrollView(
+      child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(groceryItemList.length, (index) => buildGroceryItemTile(groceryItemList[index]))),
+    );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              addItem();
-            },
-            child: const Icon(Icons.add),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            groceryItemList.isEmpty
-                ? const Center(child: Text("No Items Yet"))
-                : Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children:
-                        List.generate(groceryItemList.length, (index) => buildGroceryItemTile(groceryItemList[index]))),
-            loader(context, busy)
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                addItem();
+              },
+              child: const Icon(Icons.add),
+            )
           ],
         ),
-      ),
-    );
+        body: FutureBuilder(
+            future: loadedListItems,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return loader(context, busy);
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text(snapshot.error.toString()));
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(child: Text("No Items Yet"));
+              }
+              return _body;
+            }));
   }
 
   Widget buildGroceryItemTile(GroceryItem groceryItem) {
