@@ -1,0 +1,1 @@
+ /Users/ebenezerkolade/Documents/development/git\ projects/Personal-Flutter-Projects/native_features_and_storage/.dart_tool/flutter_build/1a9d7ea351952efed982378a849d3f65/native_assets.yaml: 
