@@ -4,13 +4,17 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point for a google maps application, which enables the user explore, obtain, edit and store information about desired locations.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The app makes use of native app features like camera, location and device storage. 
+The application implements google maps, so you will need to generate an api key from the google developer account available to you. Don't worry, it's free.
+Insert the api key in the required spots in the following files
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-ios/Runner/AppDelegate.swift
+
+-android/app/src/main/AndroidManifest.xml
+
+-lib/services/location_service.dart
+
+

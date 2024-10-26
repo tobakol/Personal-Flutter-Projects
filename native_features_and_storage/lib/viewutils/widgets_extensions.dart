@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension WidgetExtension on Widget {
-  Widget padding({double left = 0, double right = 0, double top = 0, double bottom = 0}) {
+  Widget spaceTo({double left = 0, double right = 0, double top = 0, double bottom = 0}) {
     return Padding(padding: EdgeInsets.only(bottom: bottom, top: top, left: left, right: right), child: this);
   }
 

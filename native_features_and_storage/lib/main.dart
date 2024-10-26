@@ -8,12 +8,13 @@ import 'screens/places_list_screen.dart';
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
   seedColor: const Color.fromARGB(255, 102, 6, 247),
-  surface: const Color.fromARGB(255, 56, 49, 66),
+  surface: Color.fromRGBO(56, 49, 66, 1),
 );
 
 final theme = ThemeData().copyWith(
   scaffoldBackgroundColor: colorScheme.surface,
   colorScheme: colorScheme,
+  iconTheme: IconThemeData(color: Color.fromARGB(255, 182, 6, 247)),
   textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
     titleSmall: GoogleFonts.ubuntuCondensed(
       fontWeight: FontWeight.bold,
@@ -31,6 +32,7 @@ void main() {
     const ProviderScope(child: MyApp()),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

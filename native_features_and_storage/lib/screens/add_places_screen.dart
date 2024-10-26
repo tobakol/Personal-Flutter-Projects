@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:location/location.dart';
+import 'package:native_features_and_storage/viewutils/inputs/image_input.dart';
+import 'package:native_features_and_storage/viewutils/inputs/location_input.dart';
 import 'package:native_features_and_storage/viewutils/widgets_extensions.dart';
 
 import '../models/place.dart';
@@ -16,6 +21,8 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final placeNameController = TextEditingController();
+  File pickedImage = File("");
+  PlaceLocation? pickedLocationData;
   Place newPlace = Place();
   @override
   Widget build(BuildContext context) {
@@ -26,6 +33,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
           key: _formKey,
           child: Column(children: [
             TextFormField(
+              style: TextStyle(color: Colors.white),
               controller: placeNameController,
               validator: (value) {
                 if (value == null || value.isEmpty || value.trim().length <= 5 || value.trim().length > 50) {
@@ -33,19 +41,28 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 }
                 return null;
               },
-              onSaved: (newValue) => newPlace = Place(name: newValue,),
-            ).padding(bottom: 16),
+              onSaved: (newValue) => newPlace = Place(
+                name: newValue,
+              ),
+            ).spaceTo(bottom: 16),
+            ImageInput(
+              onChooseImage: (image) => pickedImage = image,
+            ).spaceTo(bottom: 16),
+            LocationInput(
+              onChooseLocation: (placeLocation) => pickedLocationData = placeLocation,
+            ),
             ElevatedButton(
                 onPressed: () {
                   saveItem(ref, placeProviderService);
                 },
                 child: const Text("Add Place"))
-          ])),
+          ])).paddingSymmetric(horizontal: 24, vertical: 16),
     );
   }
 
   void saveItem(WidgetRef serviceRef, PlacesProviderService placeProviderService) {
     _formKey.currentState!.save();
+    newPlace = Place(name: placeNameController.text.trim(), image: pickedImage, placeLocation: pickedLocationData);
     placeProviderService.editPlaceList(newPlace);
     Navigator.pop(context);
   }
