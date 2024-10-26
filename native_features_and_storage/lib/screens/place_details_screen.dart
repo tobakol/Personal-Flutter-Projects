@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:native_features_and_storage/screens/maps_screen.dart';
+import 'package:native_features_and_storage/services/location_service.dart';
 import 'package:native_features_and_storage/viewutils/widgets_extensions.dart';
 
 import '../models/place.dart';
-import '../viewutils/constants.dart';
 import '../viewutils/default_scaffold.dart';
 
 class PlacesDetails extends StatefulWidget {
@@ -47,19 +47,19 @@ class _PlacesDetailsState extends State<PlacesDetails> {
                       },
                       child: CircleAvatar(
                         radius: 45,
-                        backgroundImage: NetworkImage(ConstantsUtil.mapSnaphshotUrl(
+                        backgroundImage: NetworkImage(LocationService().mapSnaphshotUrl(
                             latitude: widget.chosenPlace.placeLocation!.latitude,
-                            longitude: widget.chosenPlace.placeLocation!.longitude!)),
+                            longitude: widget.chosenPlace.placeLocation!.longitude)),
                       ),
                     ),
                     Container(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.black),
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: const BoxDecoration(color: Colors.black),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        widget.chosenPlace.placeLocation!.address!,
+                        widget.chosenPlace.placeLocation!.address,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     )
                   ],

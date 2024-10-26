@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-final loader = const SpinKitDualRing(color: Colors.red);
+const loader = SpinKitDualRing(color: Colors.red);
 showSnackbar(BuildContext context, String? message, [String? s]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message ?? "")));
 }

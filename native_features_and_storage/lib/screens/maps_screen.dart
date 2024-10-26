@@ -20,7 +20,6 @@ class _MapsScreenState extends State<MapsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.isSelecting == false) {
       _pickedPosition = LatLng(widget.placeLocation.latitude, widget.placeLocation.longitude);
@@ -37,7 +36,7 @@ class _MapsScreenState extends State<MapsScreen> {
               onPressed: () {
                 Navigator.of(context).pop(_pickedPosition);
               },
-              icon: Icon(Icons.save))
+              icon: const Icon(Icons.save))
       ],
       body: GoogleMap(
         onTap: widget.isSelecting == false
@@ -55,7 +54,7 @@ class _MapsScreenState extends State<MapsScreen> {
             ? {}
             : {
                 Marker(
-                  markerId: MarkerId("Place"),
+                  markerId: const MarkerId("Place"),
                   position:
                       _pickedPosition!, //?? LatLng(widget.placeLocation.latitude, widget.placeLocation.longitude),
                 )

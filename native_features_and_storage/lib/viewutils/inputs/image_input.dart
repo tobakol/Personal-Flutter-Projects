@@ -60,13 +60,13 @@ class _ImageInputState extends State<ImageInput> {
                 onTap: () {
                   takePictute(viaCamera: false);
                 },
-                child: Icon(Icons.photo_size_select_actual_outlined),
+                child: const Icon(Icons.photo_size_select_actual_outlined),
               ),
               GestureDetector(
                   onTap: () {
                     takePictute(viaCamera: true);
                   },
-                  child: Icon(Icons.camera)),
+                  child: const Icon(Icons.camera)),
             ],
           ),
         ],

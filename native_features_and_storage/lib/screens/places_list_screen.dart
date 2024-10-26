@@ -15,6 +15,7 @@ class PlacesListScreen extends ConsumerStatefulWidget {
 
 class _PlacesListScreenState extends ConsumerState<PlacesListScreen> {
   bool busy = false;
+  //final placesProviderService =
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

@@ -8,13 +8,13 @@ import 'screens/places_list_screen.dart';
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
   seedColor: const Color.fromARGB(255, 102, 6, 247),
-  surface: Color.fromRGBO(56, 49, 66, 1),
+  surface: const Color.fromRGBO(56, 49, 66, 1),
 );
 
 final theme = ThemeData().copyWith(
   scaffoldBackgroundColor: colorScheme.surface,
   colorScheme: colorScheme,
-  iconTheme: IconThemeData(color: Color.fromARGB(255, 182, 6, 247)),
+  iconTheme: const IconThemeData(color: Color.fromARGB(255, 182, 6, 247)),
   textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
     titleSmall: GoogleFonts.ubuntuCondensed(
       fontWeight: FontWeight.bold,

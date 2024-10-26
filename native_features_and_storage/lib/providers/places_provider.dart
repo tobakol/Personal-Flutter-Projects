@@ -23,7 +23,7 @@ Future<Database> _getDataBase() async {
 Future<File> _setImageDirectory(File? image) async {
   final appDir = await sys_paths.getApplicationDocumentsDirectory();
   final fileName = path.basename(image!.path);
-  final copiedImage = await image!.copy("${appDir.path}/$fileName");
+  final copiedImage = await image.copy("${appDir.path}/$fileName");
   return copiedImage;
 }
 

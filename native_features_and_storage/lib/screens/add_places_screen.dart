@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:location/location.dart';
 import 'package:native_features_and_storage/viewutils/inputs/image_input.dart';
 import 'package:native_features_and_storage/viewutils/inputs/location_input.dart';
 import 'package:native_features_and_storage/viewutils/widgets_extensions.dart';
@@ -33,7 +32,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
           key: _formKey,
           child: Column(children: [
             TextFormField(
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               controller: placeNameController,
               validator: (value) {
                 if (value == null || value.isEmpty || value.trim().length <= 5 || value.trim().length > 50) {
