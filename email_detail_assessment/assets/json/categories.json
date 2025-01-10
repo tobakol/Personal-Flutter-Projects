@@ -1,0 +1,52 @@
+{"DUMMY_CATEGORIES": [
+    {
+      "id": "c1",
+      "title": "Italian",
+      "color": "purple"
+    },
+    {
+      "id": "c2",
+      "title": "Quick & Easy",
+      "color": "red"
+    },
+    {
+      "id": "c3",
+      "title": "Hamburgers",
+      "color": "orange"
+    },
+    {
+      "id": "c4",
+      "title": "German",
+      "color": "amber"
+    },
+    {
+      "id": "c5",
+      "title": "Light & Lovely",
+      "color": "blue"
+    },
+    {
+      "id": "c6",
+      "title": "Exotic",
+      "color": "green"
+    },
+    {
+      "id": "c7",
+      "title": "Breakfast",
+      "color": "lightBlue"
+    },
+    {
+      "id": "c8",
+      "title": "Asian",
+      "color": "lightGreen"
+    },
+    {
+      "id": "c9",
+      "title": "French",
+      "color": "pink"
+    },
+    {
+      "id": "c10",
+      "title": "Summer",
+      "color": "teal"
+    }
+  ]}
